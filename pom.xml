@@ -1,3 +1,4 @@
+<!-- put this inside <project> ... -->
 <properties>
   <maven.compiler.source>1.8</maven.compiler.source>
   <maven.compiler.target>1.8</maven.compiler.target>
@@ -6,6 +7,7 @@
 
 <build>
   <plugins>
+    <!-- Use a recent compiler plugin -->
     <plugin>
       <artifactId>maven-compiler-plugin</artifactId>
       <version>3.11.0</version>
@@ -14,7 +16,7 @@
         <target>${maven.compiler.target}</target>
       </configuration>
     </plugin>
-    <!-- keep your other plugins here (surefire, reporting, etc.) -->
+
+    <!-- keep your other plugins here (surefire, cucumber reporting, etc.) -->
   </plugins>
 </build>
-``

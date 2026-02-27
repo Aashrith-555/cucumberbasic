@@ -1,22 +1,144 @@
-<!-- put this inside <project> ... -->
-<properties>
-  <maven.compiler.source>1.8</maven.compiler.source>
-  <maven.compiler.target>1.8</maven.compiler.target>
-  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-</properties>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-<build>
-  <plugins>
-    <!-- Use a recent compiler plugin -->
-    <plugin>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.11.0</version>
-      <configuration>
-        <source>${maven.compiler.source}</source>
-        <target>${maven.compiler.target}</target>
-      </configuration>
-    </plugin>
+  <groupId>com.executeautomation</groupId>
+  <artifactId>CucumberBasics</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>CucumberBasics</name>
+  <description>Selenium + Cucumber (TestNG) demo with ExtentReports</description>
+  <url>https://github.com/Aashrith-555/SeleniumWithCucucumber</url>
 
-    <!-- keep your other plugins here (surefire, cucumber reporting, etc.) -->
-  </plugins>
-</build>
+  <properties>
+    <!-- Java & encoding -->
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!-- Dependency versions -->
+    <cucumber.version>6.9.1</cucumber.version>
+    <selenium.version>3.141.59</selenium.version>
+    <webdrivermanager.version>4.3.1</webdrivermanager.version>
+    <testng.version>7.10.2</testng.version>
+    <extentreports.version>5.1.1</extentreports.version>
+    <surefire.version>3.2.5</surefire.version>
+    <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+
+    <!-- Optional Cucumber JSON output (for later HTML reports if you want) -->
+    <cucumber.json>${project.build.directory}/cucumber.json</cucumber.json>
+  </properties>
+
+  <dependencies>
+    <!-- Cucumber core (Java) -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>${cucumber.version}</version>
+    </dependency>
+
+    <!-- Cucumber TestNG runner -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-testng</artifactId>
+      <version>${cucumber.version}</version>
+    </dependency>
+
+    <!-- PicoContainer (optional DI support in steps) -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-picocontainer</artifactId>
+      <version>${cucumber.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Selenium WebDriver (the project examples use Selenium 3) -->
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>${selenium.version}</version>
+    </dependency>
+
+    <!-- WebDriverManager to manage browser drivers -->
+    <dependency>
+      <groupId>io.github.bonigarcia</groupId>
+      <artifactId>webdrivermanager</artifactId>
+      <version>${webdrivermanager.version}</version>
+    </dependency>
+
+    <!-- TestNG (suite is driven by testng.xml) -->
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- ExtentReports Core (provides ExtentReports, ExtentTest, GherkinKeyword, Feature) -->
+    <dependency>
+      <groupId>com.aventstack</groupId>
+      <artifactId>extentreports</artifactId>
+      <version>${extentreports.version}</version>
+    </dependency>
+
+    <!-- Extent Spark Reporter (provides ExtentSparkReporter) -->
+    <dependency>
+      <groupId>com.aventstack</groupId>
+      <artifactId>extentreports-spark</artifactId>
+      <version>${extentreports.version}</version>
+    </dependency>
+
+    <!-- JUnit 4: only needed if your code still imports org.junit.Assert -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Checker Framework annotations (satisfies org.checkerframework... imports) -->
+    <dependency>
+      <groupId>org.checkerframework</groupId>
+      <artifactId>checker-qual</artifactId>
+      <version>3.42.0</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Java compilation on JDK 17 -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+        </configuration>
+      </plugin>
+
+      <!-- Run TestNG suite (src/test/java/testng.xml) -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire.version}</version>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>src/test/java/testng.xml</suiteXmlFile>
+          </suiteXmlFiles>
+
+          <!-- If you want Cucumber JSON for later reporting, keep this: -->
+          <systemProperties>
+            <cucumber.options>--plugin json:${cucumber.json}</cucumber.options>
+          </systemProperties>
+
+          <!-- Handy when TestNG wants DTD over HTTP behind proxies -->
+          <systemPropertyVariables>
+            <testng.dtd.http>true</testng.dtd.http>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
